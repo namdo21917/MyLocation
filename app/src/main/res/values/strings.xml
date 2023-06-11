@@ -2,7 +2,10 @@
     <string name="app_name">MyLocation</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="map">Map</string>
 
+    <string name="title_notifications">Notifications</string>
+
+    <string name="map">Map</string>
+    <string name="share_history">History</string>
+    <string name="favorites">Favorites</string>
 </resources>
