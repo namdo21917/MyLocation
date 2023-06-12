@@ -1,4 +1,4 @@
-package com.example.mylocation.ui.history
+package com.example.mylocation.ui.shared
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
