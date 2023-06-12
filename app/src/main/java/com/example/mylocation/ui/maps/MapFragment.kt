@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
@@ -28,6 +29,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val binding get() = _binding!!
 
     private lateinit var mMap: GoogleMap
+    private lateinit var lastLocation: Location
+    private var locationPermissionGranted = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreateView(
@@ -70,19 +73,25 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED
+        requestLocationPermission()
+    }
+
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+        )
+        if (ContextCompat.checkSelfPermission(
+                this.requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        val currentLatLng = LatLng(location.latitude, location.longitude)
-                        mMap.addMarker(MarkerOptions().position(currentLatLng).title("Hiện tại"))
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng))
-                    }
-                }
+            locationPermissionGranted
+        } else {
+            onDestroyView()
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -93,5 +102,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onDestroyView()
 
         _binding = null
+    }
+
+    companion object {
+        private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
     }
 }
