@@ -4,22 +4,19 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-
-import com.example.mylocation.R
 import com.example.mylocation.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -74,21 +71,60 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         requestLocationPermission()
+        getCurrentLocation()
     }
 
     private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(
-            this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-        )
         if (ContextCompat.checkSelfPermission(
                 this.requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+            )
+            == PackageManager.PERMISSION_GRANTED
         ) {
-            locationPermissionGranted
+            locationPermissionGranted = true
+            getCurrentLocation()
         } else {
-            onDestroyView()
+            ActivityCompat.requestPermissions(
+                this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationPermissionGranted = true
+                getCurrentLocation()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Ứng dụng cần truy cập vị trí.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestLocationPermission()
+        } else {
+            fusedLocationClient.lastLocation.addOnCompleteListener { task ->
+                if (task.isSuccessful && task.result != null) {
+                    lastLocation = task.result
+                    val currentLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
+                    mMap.addMarker(MarkerOptions().position(currentLatLng).title("Hiện tại"))
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+                }
+            }
         }
     }
 
