@@ -57,13 +57,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.map.onStop()
     }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        val mapFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-//        mapFragment?.getMapAsync(this)
-//    }
-
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
     }
