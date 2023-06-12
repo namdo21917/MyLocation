@@ -18,18 +18,45 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var mMap: GoogleMap
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-        val map = binding.map
-        map.onCreate(savedInstanceState)
-        map.getMapAsync(this)
 
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.map.onCreate(savedInstanceState)
+        binding.map.getMapAsync(this)
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.map.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.map.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.map.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.map.onStop()
+    }
+
 //    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 //        super.onViewCreated(view, savedInstanceState)
 //
@@ -38,16 +65,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 //    }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        val sydney = LatLng(-33.852, 151.211)
-        googleMap.addMarker(
-            MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney")
-        )
+        mMap = googleMap
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.map.onDestroy()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         _binding = null
     }
 }
