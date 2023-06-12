@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.mylocation.ui.history.HistoryFragment"
-        android:label="@string/share_history"
+        android:label="@string/shared"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment

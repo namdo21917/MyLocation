@@ -6,6 +6,6 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="map">Map</string>
-    <string name="share_history">History</string>
+    <string name="shared">Shared</string>
     <string name="favorites">Favorites</string>
 </resources>
