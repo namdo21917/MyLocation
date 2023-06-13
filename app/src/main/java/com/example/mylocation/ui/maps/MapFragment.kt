@@ -43,8 +43,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
 
-        Places.initialize(requireContext(), "AIzaSyD_YHPkj3pREUP-J2Upqn2oVtiuP4WLWQo")
-        placesClient = Places.createClient(this.requireContext())
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         return binding.root
