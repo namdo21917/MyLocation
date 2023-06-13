@@ -8,4 +8,6 @@
     <string name="map">Map</string>
     <string name="shared">Shared</string>
     <string name="favorites">Favorites</string>
+    <string name="favorite_button">Favorite Button</string>
+    <string name="share_button">Share Button</string>
 </resources>
