@@ -2,6 +2,7 @@ package com.example.mylocation.ui.maps
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,6 +20,10 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.net.PlacesClient
+import java.util.Locale
+
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -29,6 +34,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var lastLocation: Location
     private var locationPermissionGranted = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var placesClient: PlacesClient
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +42,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
+
+        Places.initialize(requireContext(), "AIzaSyD_YHPkj3pREUP-J2Upqn2oVtiuP4WLWQo")
+        placesClient = Places.createClient(this.requireContext())
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         return binding.root
@@ -86,7 +95,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         } else {
             ActivityCompat.requestPermissions(
                 this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
+                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+            )
         }
     }
 
@@ -121,8 +131,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if (task.isSuccessful && task.result != null) {
                     lastLocation = task.result
                     val currentLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
-                    mMap.addMarker(MarkerOptions().position(currentLatLng).title("Hiện tại"))
+                    val geocoder = Geocoder(this.requireContext(), Locale.getDefault())
+                    val addresses =
+                        geocoder.getFromLocation(currentLatLng.latitude, currentLatLng.longitude, 1)
+                    if (addresses != null) {
+                        mMap.addMarker(
+                            MarkerOptions().position(currentLatLng)
+                                .title(addresses[0].getAddressLine(0))
+                                .snippet(addresses[0].countryName)
+                        )
+                    }
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+
                 }
             }
         }
