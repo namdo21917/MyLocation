@@ -8,10 +8,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.mylocation.R
 import com.example.mylocation.databinding.FragmentMapBinding
+import com.example.mylocation.ui.infoWindow.InfoWindowAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -20,7 +23,6 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.libraries.places.api.net.PlacesClient
 import java.util.Locale
 
 
@@ -33,7 +35,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
     private lateinit var lastLocation: Location
     private var locationPermissionGranted = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var placesClient: PlacesClient
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,6 +82,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
         getCurrentLocation()
         mMap.setOnMapClickListener(this)
 
+        val infoWindowAdapter = InfoWindowAdapter(requireContext())
+        mMap.setInfoWindowAdapter(infoWindowAdapter)
     }
 
     private fun requestLocationPermission() {
