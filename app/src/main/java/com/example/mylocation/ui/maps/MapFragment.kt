@@ -95,8 +95,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             locationPermissionGranted = true
             getCurrentLocation()
         } else {
-            ActivityCompat.requestPermissions(
-                this.requireActivity(),
+            requestPermissions(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
@@ -126,7 +125,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun getCurrentLocation() {
-        if ((ActivityCompat.checkSelfPermission(
+        if ((ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(
@@ -138,22 +137,28 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         ) {
             requestLocationPermission()
         } else {
-            fusedLocationClient.lastLocation.addOnCompleteListener { task ->
-                if (task.isSuccessful && task.result != null) {
-                    lastLocation = task.result
-                    val currentLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
-                    val geocoder = Geocoder(this.requireContext(), Locale.getDefault())
-                    val addresses =
-                        geocoder.getFromLocation(currentLatLng.latitude, currentLatLng.longitude, 1)
-                    if (addresses != null) {
-                        mMap.addMarker(
-                            MarkerOptions().position(currentLatLng)
-                                .title(addresses[0].getAddressLine(0))
-                                .snippet(addresses[0].countryName)
-                        )
-                    }
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+            if (locationPermissionGranted) {
+                fusedLocationClient.lastLocation.addOnCompleteListener { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        lastLocation = task.result
+                        val currentLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
+                        val geocoder = Geocoder(this.requireContext(), Locale.getDefault())
+                        val addresses =
+                            geocoder.getFromLocation(
+                                currentLatLng.latitude,
+                                currentLatLng.longitude,
+                                1
+                            )
+                        if (addresses != null) {
+                            mMap.addMarker(
+                                MarkerOptions().position(currentLatLng)
+                                    .title(addresses[0].getAddressLine(0))
+                                    .snippet(addresses[0].countryName)
+                            )
+                        }
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
 
+                    }
                 }
             }
         }
@@ -162,7 +167,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.map.onDestroy()
     }
 
     override fun onDestroyView() {
