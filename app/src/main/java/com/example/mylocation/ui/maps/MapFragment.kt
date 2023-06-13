@@ -17,6 +17,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -25,7 +26,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import java.util.Locale
 
 
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
 
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
@@ -79,6 +80,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mMap = googleMap
         requestLocationPermission()
         getCurrentLocation()
+        mMap.setOnMapClickListener(this)
+
     }
 
     private fun requestLocationPermission() {
@@ -93,6 +96,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     == PackageManager.PERMISSION_GRANTED)
         ) {
             locationPermissionGranted = true
+            mMap.isMyLocationEnabled
             getCurrentLocation()
         } else {
             requestPermissions(
@@ -156,13 +160,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                     .snippet(addresses[0].countryName)
                             )
                         }
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
 
                     }
                 }
             }
         }
     }
+
 
 
     override fun onDestroy() {
@@ -177,5 +182,24 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     companion object {
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
+    }
+
+    override fun onMapClick(latLng: LatLng) {
+        mMap.clear()
+        val geocoder = Geocoder(this.requireContext(), Locale.getDefault())
+        val addresses =
+            geocoder.getFromLocation(
+                latLng.latitude,
+                latLng.longitude,
+                1
+            )
+        if (addresses != null) {
+            mMap.addMarker(
+                MarkerOptions().position(latLng)
+                    .title(addresses[0].getAddressLine(0))
+                    .snippet(addresses[0].countryName)
+            )
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
     }
 }
