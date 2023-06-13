@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.mylocation.databinding.FragmentMapBinding
@@ -21,7 +20,6 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import java.util.Locale
 
@@ -96,7 +94,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
                     == PackageManager.PERMISSION_GRANTED)
         ) {
             locationPermissionGranted = true
-            mMap.isMyLocationEnabled
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled = true
             getCurrentLocation()
         } else {
             requestPermissions(
@@ -167,7 +166,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
             }
         }
     }
-
 
 
     override fun onDestroy() {
