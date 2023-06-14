@@ -10,4 +10,6 @@
     <string name="favorites">Favorites</string>
     <string name="favorite_button">Favorite Button</string>
     <string name="share_button">Share Button</string>
+    <string name="button_favorite">Yêu thích</string>
+    <string name="button_share">Chia sẻ</string>
 </resources>
