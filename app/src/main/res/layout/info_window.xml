@@ -47,7 +47,7 @@
 
             <Button
                 android:id="@+id/button_share"
-                android:layout_width="350dp"
+                android:layout_width="350dp"    
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawableEnd="@android:drawable/ic_menu_share"
