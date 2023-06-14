@@ -3,15 +3,23 @@ package com.example.mylocation
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager2.widget.ViewPager2
+import com.example.mylocation.adapter.ViewPagerAdapter
 import com.example.mylocation.databinding.ActivityMainBinding
+import com.example.mylocation.ui.favorites.FavoriteFragment
+import com.example.mylocation.ui.maps.MapFragment
+import com.example.mylocation.ui.shared.SharedFragment
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,14 +28,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        val navView: BottomNavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_map, R.id.navigation_shared, R.id.navigation_favorites
-            )
+        val viewPager2 = binding.pager
+        viewPager2.isUserInputEnabled = false
+
+        val tabLayout = binding.tabLayout
+
+        val fragmentList = mutableListOf(
+            Pair("Map", MapFragment()),
+            Pair("Lịch sử", SharedFragment()),
+            Pair("Yêu thích", FavoriteFragment())
         )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, lifecycle, fragmentList)
+        viewPager2.adapter = viewPagerAdapter
+
+
+
+        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+
+            tab.text = viewPagerAdapter.getName(position)
+        }.attach()
     }
 }

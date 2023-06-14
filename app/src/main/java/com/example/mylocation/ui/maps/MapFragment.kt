@@ -77,7 +77,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.setPadding(0,120,0,0)
         requestLocationPermission()
         getCurrentLocation()
         mMap.setOnMapClickListener(this)
