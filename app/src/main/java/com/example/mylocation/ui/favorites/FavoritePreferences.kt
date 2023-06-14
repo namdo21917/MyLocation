@@ -1,6 +1,6 @@
 package com.example.mylocation.ui.favorites
 
-import FavoritePlace
+import com.example.mylocation.data.FavoritePlace
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson

@@ -41,10 +41,7 @@ class MainActivity : AppCompatActivity() {
         viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, lifecycle, fragmentList)
         viewPager2.adapter = viewPagerAdapter
 
-
-
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-
             tab.text = viewPagerAdapter.getName(position)
         }.attach()
     }

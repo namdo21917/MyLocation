@@ -23,17 +23,19 @@ class FavoriteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val favoriteViewModel =
-            ViewModelProvider(this).get(FavoriteViewModel::class.java)
-
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val favoriteViewModel =
+            ViewModelProvider(this)[FavoriteViewModel::class.java]
         val textView: TextView = binding.textNotifications
         favoriteViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
-        return root
     }
 
     override fun onDestroyView() {
