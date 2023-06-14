@@ -8,9 +8,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.mylocation.R
 import com.example.mylocation.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -20,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.util.Locale
 
 
@@ -78,6 +82,32 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
         getCurrentLocation()
         mMap.setOnMapClickListener(this)
 
+
+        mMap.setOnInfoWindowClickListener { marker ->
+            val title = marker.title
+            val snippet = marker.snippet
+
+            val bottomSheetView = layoutInflater.inflate(R.layout.info_window, null)
+            val markerTitleTextView = bottomSheetView.findViewById<TextView>(R.id.placeName)
+            val markerSnippetTextView = bottomSheetView.findViewById<TextView>(R.id.placeCountry)
+            val favoriteButton = bottomSheetView.findViewById<Button>(R.id.buttonFavorite)
+            val shareButton = bottomSheetView.findViewById<Button>(R.id.buttonShare)
+
+            markerTitleTextView.text = title
+            markerSnippetTextView.text = snippet
+
+            favoriteButton.setOnClickListener {
+                Toast.makeText(requireContext(), "Test yêu thích", Toast.LENGTH_SHORT)
+            }
+
+            shareButton.setOnClickListener {
+                Toast.makeText(requireContext(), "Test chia sẻ", Toast.LENGTH_SHORT)
+            }
+
+            val bottomSheetDialog = BottomSheetDialog(requireContext())
+            bottomSheetDialog.setContentView(bottomSheetView)
+            bottomSheetDialog.show()
+        }
     }
 
     private fun requestLocationPermission() {
