@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.mylocation.R
+import com.example.mylocation.data.DatabaseHelper
 import com.example.mylocation.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -36,6 +37,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
     private lateinit var lastLocation: Location
     private var locationPermissionGranted = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var databaseHelper : DatabaseHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,8 +86,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
 
 
         mMap.setOnInfoWindowClickListener { marker ->
-            val title = marker.title
-            val snippet = marker.snippet
+            val title = marker.title.toString()
+            val snippet = marker.snippet.toString()
 
             val bottomSheetView = layoutInflater.inflate(R.layout.info_window, null)
             val markerTitleTextView = bottomSheetView.findViewById<TextView>(R.id.placeName)
@@ -97,7 +99,12 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
             markerSnippetTextView.text = snippet
 
             favoriteButton.setOnClickListener {
-                Toast.makeText(requireContext(), "Test yêu thích", Toast.LENGTH_SHORT)
+                databaseHelper = DatabaseHelper(requireContext())
+                try {
+                    databaseHelper.addFavoriteList(title, snippet, marker.position.latitude, marker.position.longitude)
+                } catch (e: Exception) {
+                    throw Exception("Cannot add this marker")
+                }
             }
 
             shareButton.setOnClickListener {
@@ -217,14 +224,16 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
             geocoder.getFromLocation(
                 latLng.latitude,
                 latLng.longitude,
-                1
+                10
             )
-        if (addresses != null) {
+        if (!addresses.isNullOrEmpty()) {
             mMap.addMarker(
                 MarkerOptions().position(latLng)
                     .title(addresses[0].getAddressLine(0))
                     .snippet(addresses[0].countryName)
             )
+        } else {
+            mMap.addMarker(MarkerOptions().position(latLng))
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
     }
