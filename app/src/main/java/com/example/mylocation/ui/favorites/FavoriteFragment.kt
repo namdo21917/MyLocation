@@ -4,19 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mylocation.R
+import com.example.mylocation.adapter.FavoritePlaceAdapter
+import com.example.mylocation.data.FavoritePlace
 import com.example.mylocation.databinding.FragmentFavoritesBinding
 
 
 class FavoriteFragment : Fragment() {
 
     private var _binding: FragmentFavoritesBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var favoritePlaceRecyclerView: RecyclerView
+    private lateinit var adapter: FavoritePlaceAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,16 +33,35 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val favoriteViewModel =
-            ViewModelProvider(this)[FavoriteViewModel::class.java]
-        val textView: TextView = binding.textNotifications
-        favoriteViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+
+        favoritePlaceRecyclerView = view.findViewById(R.id.recycler_view_favorite_places)
+        val emptyImage: ImageView = view.findViewById(R.id.empty_favorite_place)
+
+        favoritePlaceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val favoritePlaceList = createFavoritePlace()
+        if (favoritePlaceList.isEmpty()) {
+            favoritePlaceRecyclerView.visibility = View.GONE
+            emptyImage.visibility = View.VISIBLE
+        } else {
+            favoritePlaceRecyclerView.visibility = View.VISIBLE
+            emptyImage.visibility = View.GONE
+
+            adapter = FavoritePlaceAdapter(createFavoritePlace())
+            favoritePlaceRecyclerView.adapter = adapter
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun createFavoritePlace(): MutableList<FavoritePlace> {
+        val favoritePlaces = mutableListOf<FavoritePlace>()
+        favoritePlaces.add(FavoritePlace("Van Mieu", "Ha Noi"))
+        favoritePlaces.add(FavoritePlace("Hoang Mai", "Ha Noi"))
+
+        return favoritePlaces
     }
 }

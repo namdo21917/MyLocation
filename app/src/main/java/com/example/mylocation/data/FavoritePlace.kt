@@ -1,9 +1,10 @@
 package com.example.mylocation.data
 
+
 data class FavoritePlace(
-        val id: Long,
-        val name: String,
+//        val id: Long,
         val address: String,
-        val latitude: Double,
-        val longitude: Double
+        val snippet: String,
+//        val latitude: Double,
+//        val longitude: Double
 )
