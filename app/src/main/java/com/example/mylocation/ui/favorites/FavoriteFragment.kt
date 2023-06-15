@@ -39,7 +39,7 @@ class FavoriteFragment : Fragment() {
 
         favoritePlaceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val favoritePlaceList = createFavoritePlace()
+        val favoritePlaceList = mFavoritePlaces
         if (favoritePlaceList.isEmpty()) {
             favoritePlaceRecyclerView.visibility = View.GONE
             emptyImage.visibility = View.VISIBLE
@@ -47,7 +47,7 @@ class FavoriteFragment : Fragment() {
             favoritePlaceRecyclerView.visibility = View.VISIBLE
             emptyImage.visibility = View.GONE
 
-            adapter = FavoritePlaceAdapter(createFavoritePlace())
+            adapter = FavoritePlaceAdapter(favoritePlaceList)
             favoritePlaceRecyclerView.adapter = adapter
         }
     }
@@ -57,11 +57,10 @@ class FavoriteFragment : Fragment() {
         _binding = null
     }
 
-    private fun createFavoritePlace(): MutableList<FavoritePlace> {
+    private val  mFavoritePlaces by lazy {
         val favoritePlaces = mutableListOf<FavoritePlace>()
         favoritePlaces.add(FavoritePlace("Van Mieu", "Ha Noi"))
         favoritePlaces.add(FavoritePlace("Hoang Mai", "Ha Noi"))
-
-        return favoritePlaces
+        favoritePlaces
     }
 }

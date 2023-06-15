@@ -38,7 +38,7 @@ class SharedFragment : Fragment() {
 
         val emptyImage: ImageView = view.findViewById(R.id.image_empty_shared_place)
 
-        val sharedPlaceList = createSharedPlace()
+        val sharedPlaceList = mSharedPlaces
         if (sharedPlaceList.isEmpty()) {
             sharedPlaceRecyclerView.visibility = View.GONE
             emptyImage.visibility = View.VISIBLE
@@ -51,11 +51,10 @@ class SharedFragment : Fragment() {
         }
     }
 
-    private fun createSharedPlace(): MutableList<SharedPlace> {
-        val sharedPlaces = mutableListOf<SharedPlace>()
-        sharedPlaces.add(SharedPlace("Van Mieu", "Ha Noi"))
-        sharedPlaces.add(SharedPlace("Hoang Mai", "Ha Noi"))
-
-        return sharedPlaces
+    private val  mSharedPlaces by lazy {
+        val favoritePlaces = mutableListOf<SharedPlace>()
+        favoritePlaces.add(SharedPlace("Van Mieu", "Ha Noi"))
+        favoritePlaces.add(SharedPlace("Hoang Mai", "Ha Noi"))
+        favoritePlaces
     }
 }

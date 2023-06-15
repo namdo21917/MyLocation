@@ -63,6 +63,7 @@ class DatabaseHelper(context: Context) :
 
     fun addFavoriteList(address: String, snippet: String, longitude: Double, latitude: Double) {
         val db = this.writableDatabase
+        this.openDatabase()
         val values = ContentValues().apply {
             put("address", address)
             put("snippet", snippet)
