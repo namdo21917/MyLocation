@@ -4,39 +4,58 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mylocation.R
+import com.example.mylocation.adapter.SharedPlaceAdapter
+import com.example.mylocation.data.SharedPlace
 import com.example.mylocation.databinding.FragmentSharedBinding
 
 class SharedFragment : Fragment() {
 
     private var _binding: FragmentSharedBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var sharedPlaceAdapter: SharedPlaceAdapter
+    private lateinit var sharedPlaceRecyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val historyViewModel =
-            ViewModelProvider(this).get(HistoryViewModel::class.java)
-
         _binding = FragmentSharedBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        historyViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        sharedPlaceRecyclerView = view.findViewById(R.id.recycler_view_shared_places)
+        sharedPlaceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val emptyImage: ImageView = view.findViewById(R.id.image_empty_shared_place)
+
+        val sharedPlaceList = createSharedPlace()
+        if (sharedPlaceList.isEmpty()) {
+            sharedPlaceRecyclerView.visibility = View.GONE
+            emptyImage.visibility = View.VISIBLE
+        } else {
+            sharedPlaceRecyclerView.visibility = View.VISIBLE
+            emptyImage.visibility = View.GONE
+
+            sharedPlaceAdapter = SharedPlaceAdapter(sharedPlaceList)
+            sharedPlaceRecyclerView.adapter = sharedPlaceAdapter
+        }
+    }
+
+    private fun createSharedPlace(): MutableList<SharedPlace> {
+        val sharedPlaces = mutableListOf<SharedPlace>()
+        sharedPlaces.add(SharedPlace("Van Mieu", "Ha Noi"))
+        sharedPlaces.add(SharedPlace("Hoang Mai", "Ha Noi"))
+
+        return sharedPlaces
     }
 }

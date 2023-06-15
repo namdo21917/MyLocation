@@ -3,6 +3,7 @@ package com.example.mylocation.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mylocation.R
 import com.example.mylocation.data.SharedPlace
@@ -21,10 +22,18 @@ class SharedPlaceAdapter(private val sharedPlaces: MutableList<SharedPlace>) :
     }
 
     override fun onBindViewHolder(holder: SharedPlaceViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val sharedPlace = sharedPlaces[position]
+        holder.bind(sharedPlace)
     }
 
     inner class SharedPlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val placeName: TextView = itemView.findViewById(R.id.text_shared_place_name)
+        private val placeSnippet: TextView = itemView.findViewById(R.id.text_shared_place_snippet)
+
+        fun bind(sharedPlace: SharedPlace) {
+            placeName.text = sharedPlace.address
+            placeSnippet.text = sharedPlace.snippet
+        }
 
     }
 

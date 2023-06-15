@@ -28,8 +28,8 @@ class FavoritePlaceAdapter(private val favoritePlaces: MutableList<FavoritePlace
     }
 
     inner class FavoritePlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val placeName: TextView = itemView.findViewById(R.id.text_place_name)
-        private val placeSnippet: TextView = itemView.findViewById(R.id.text_place_snippet)
+        private val placeName: TextView = itemView.findViewById(R.id.text_favorite_place_name)
+        private val placeSnippet: TextView = itemView.findViewById(R.id.text_favorite_place_snippet)
 
         fun bind(favoritePlace: FavoritePlace) {
             placeName.text = favoritePlace.address

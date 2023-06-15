@@ -35,7 +35,7 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         favoritePlaceRecyclerView = view.findViewById(R.id.recycler_view_favorite_places)
-        val emptyImage: ImageView = view.findViewById(R.id.empty_favorite_place)
+        val emptyImage: ImageView = view.findViewById(R.id.image_empty_favorite_place)
 
         favoritePlaceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 

@@ -16,7 +16,7 @@
         />
 
     <ImageView
-        android:id="@+id/empty_favorite_place"
+        android:id="@+id/image_empty_favorite_place"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

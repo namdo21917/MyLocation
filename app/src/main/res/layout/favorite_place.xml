@@ -29,7 +29,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/text_place_name"
+                android:id="@+id/text_favorite_place_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
@@ -38,7 +38,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/text_place_snippet"
+                android:id="@+id/text_favorite_place_snippet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
