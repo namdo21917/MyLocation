@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mylocation.R
 import com.example.mylocation.adapter.FavoritePlaceAdapter
+import com.example.mylocation.data.DatabaseHelper
 import com.example.mylocation.data.FavoritePlace
 import com.example.mylocation.databinding.FragmentFavoritesBinding
 
@@ -20,6 +21,7 @@ class FavoriteFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var favoritePlaceRecyclerView: RecyclerView
     private lateinit var adapter: FavoritePlaceAdapter
+    private lateinit var databaseHelper : DatabaseHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +41,8 @@ class FavoriteFragment : Fragment() {
 
         favoritePlaceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val favoritePlaceList = mFavoritePlaces
+        databaseHelper = DatabaseHelper(requireContext())
+        val favoritePlaceList = databaseHelper.getFavoritePlaces()
         if (favoritePlaceList.isEmpty()) {
             favoritePlaceRecyclerView.visibility = View.GONE
             emptyImage.visibility = View.VISIBLE
@@ -59,8 +62,8 @@ class FavoriteFragment : Fragment() {
 
     private val  mFavoritePlaces by lazy {
         val favoritePlaces = mutableListOf<FavoritePlace>()
-        favoritePlaces.add(FavoritePlace("Van Mieu", "Ha Noi"))
-        favoritePlaces.add(FavoritePlace("Hoang Mai", "Ha Noi"))
+        favoritePlaces.add(FavoritePlace(1, "Ha Noi", "asd", 123.0, 123.0))
+        favoritePlaces.add(FavoritePlace(1, "Ha Noi", "asd", 123.0, 123.0))
         favoritePlaces
     }
 }

@@ -101,7 +101,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
             favoriteButton.setOnClickListener {
                 databaseHelper = DatabaseHelper(requireContext())
                 try {
-                    databaseHelper.addFavoriteList(title, snippet, marker.position.latitude, marker.position.longitude)
+                    databaseHelper.newFavoritePlace(title, snippet, marker.position.latitude, marker.position.longitude)
                 } catch (e: Exception) {
                     throw Exception("Cannot add this marker")
                 }
