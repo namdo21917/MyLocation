@@ -17,6 +17,17 @@ class DatabaseHelper(context: Context) :
                 "$FAVORITE_PLACES_TABLE_LATITUDE REAL" +
                 ")"
         db?.execSQL(createFavoritePlacesTable)
+
+        val createSharedPlacesTable = "CREATE TABLE $SHARED_PLACES_TABLE (" +
+                "$SHARED_PLACES_TABLE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$SHARED_PLACES_TABLE_ADDRESS TEXT," +
+                "$SHARED_PLACES_TABLE_SNIPPET TEXT," +
+                "$SHARED_PLACES_TABLE_LONGITUDE REAL," +
+                "$SHARED_PLACES_TABLE_LATITUDE REAL," +
+                "$SHARED_PLACES_TABLE_CONTACTS TEXT" +
+                ")"
+
+        db?.execSQL(createSharedPlacesTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -70,6 +81,45 @@ class DatabaseHelper(context: Context) :
         return favoritePlaces
     }
 
+    fun newSharedPlace(address: String, snippet: String, longitude: Double, latitude: Double, contacts: List<String>): Long {
+        val db = this.writableDatabase
+
+        val values = ContentValues().apply {
+            put("address", address)
+            put("snippet", snippet)
+            put("longitude", longitude)
+            put("latitude", latitude)
+            put("contacts", contacts.joinToString(","))
+        }
+
+        return db.insert(SHARED_PLACES_TABLE, null, values)
+    }
+
+    fun getSharedPlaces(): MutableList<SharedPlace> {
+        val db = this.readableDatabase
+
+        val sharedPlaces = mutableListOf<SharedPlace>()
+        val selectQuery = "SELECT * FROM $SHARED_PLACES_TABLE"
+
+        val cursor = db.rawQuery(selectQuery, null)
+
+        cursor.use {
+            while (it.moveToNext()) {
+                val id = it.getLong(it.getColumnIndexOrThrow("id"))
+                val address = it.getString(it.getColumnIndexOrThrow("address"))
+                val snippet = it.getString(it.getColumnIndexOrThrow("snippet"))
+                val longitude = it.getDouble(it.getColumnIndexOrThrow("longitude"))
+                val latitude = it.getDouble(it.getColumnIndexOrThrow("latitude"))
+                val contacts = it.getString(it.getColumnIndexOrThrow("contacts")).split(",")
+
+                val sharedPlace = SharedPlace(id, address, snippet, longitude, latitude, contacts)
+                sharedPlaces.add(sharedPlace)
+            }
+        }
+
+        return sharedPlaces
+    }
+
 
     companion object {
         const val DATABASE_VERSION = 1
@@ -88,7 +138,7 @@ class DatabaseHelper(context: Context) :
         const val SHARED_PLACES_TABLE_SNIPPET = "snippet"
         const val SHARED_PLACES_TABLE_LONGITUDE = "longitude"
         const val SHARED_PLACES_TABLE_LATITUDE = "latitude"
-
+        const val SHARED_PLACES_TABLE_CONTACTS = "contacts"
 
     }
 }

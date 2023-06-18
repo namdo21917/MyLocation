@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mylocation.R
 import com.example.mylocation.adapter.SharedPlaceAdapter
+import com.example.mylocation.data.DatabaseHelper
 import com.example.mylocation.data.SharedPlace
 import com.example.mylocation.databinding.FragmentSharedBinding
 
@@ -19,6 +20,7 @@ class SharedFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var sharedPlaceAdapter: SharedPlaceAdapter
     private lateinit var sharedPlaceRecyclerView: RecyclerView
+    private lateinit var databaseHelper : DatabaseHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +40,8 @@ class SharedFragment : Fragment() {
 
         val emptyImage: ImageView = view.findViewById(R.id.image_empty_shared_place)
 
-        val sharedPlaceList = mSharedPlaces
+        databaseHelper = DatabaseHelper(requireContext())
+        val sharedPlaceList = databaseHelper.getSharedPlaces()
         if (sharedPlaceList.isEmpty()) {
             sharedPlaceRecyclerView.visibility = View.GONE
             emptyImage.visibility = View.VISIBLE
@@ -51,10 +54,10 @@ class SharedFragment : Fragment() {
         }
     }
 
-    private val  mSharedPlaces by lazy {
-        val favoritePlaces = mutableListOf<SharedPlace>()
-        favoritePlaces.add(SharedPlace("Van Mieu", "Ha Noi"))
-        favoritePlaces.add(SharedPlace("Hoang Mai", "Ha Noi"))
-        favoritePlaces
-    }
+//    private val  mSharedPlaces by lazy {
+//        val favoritePlaces = mutableListOf<SharedPlace>()
+//        favoritePlaces.add(SharedPlace("Van Mieu", "Ha Noi"))
+//        favoritePlaces.add(SharedPlace("Hoang Mai", "Ha Noi"))
+//        favoritePlaces
+//    }
 }

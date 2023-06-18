@@ -1,14 +1,7 @@
 package com.example.mylocation
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.example.mylocation.adapter.ViewPagerAdapter
 import com.example.mylocation.databinding.ActivityMainBinding
 import com.example.mylocation.ui.favorites.FavoriteFragment

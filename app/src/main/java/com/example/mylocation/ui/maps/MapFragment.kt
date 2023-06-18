@@ -13,9 +13,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.mylocation.R
 import com.example.mylocation.data.DatabaseHelper
 import com.example.mylocation.databinding.FragmentMapBinding
+import com.example.mylocation.ui.contacts.ContactsFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -37,7 +39,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
     private lateinit var lastLocation: Location
     private var locationPermissionGranted = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var databaseHelper : DatabaseHelper
+    private lateinit var databaseHelper: DatabaseHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,6 +88,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
 
 
         mMap.setOnInfoWindowClickListener { marker ->
+            databaseHelper = DatabaseHelper(requireContext())
+
             val title = marker.title.toString()
             val snippet = marker.snippet.toString()
 
@@ -99,16 +103,32 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
             markerSnippetTextView.text = snippet
 
             favoriteButton.setOnClickListener {
-                databaseHelper = DatabaseHelper(requireContext())
                 try {
-                    databaseHelper.newFavoritePlace(title, snippet, marker.position.latitude, marker.position.longitude)
+                    databaseHelper.newFavoritePlace(
+                        title,
+                        snippet,
+                        marker.position.latitude,
+                        marker.position.longitude
+                    )
                 } catch (e: Exception) {
                     throw Exception("Cannot add this marker")
                 }
             }
 
             shareButton.setOnClickListener {
-                Toast.makeText(requireContext(), "Test chia sẻ", Toast.LENGTH_SHORT)
+                val contactFragment = ContactsFragment()
+
+                val bundle = Bundle()
+                bundle.putString("title", title)
+                bundle.putString("snippet", snippet)
+                bundle.putDouble("latitude", marker.position.latitude)
+                bundle.putDouble("longitude", marker.position.longitude)
+                contactFragment.arguments = bundle
+
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.map, contactFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
 
             val bottomSheetDialog = BottomSheetDialog(requireContext())

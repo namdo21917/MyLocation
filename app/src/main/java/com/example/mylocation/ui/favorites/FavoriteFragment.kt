@@ -59,11 +59,4 @@ class FavoriteFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    private val  mFavoritePlaces by lazy {
-        val favoritePlaces = mutableListOf<FavoritePlace>()
-        favoritePlaces.add(FavoritePlace(1, "Ha Noi", "asd", 123.0, 123.0))
-        favoritePlaces.add(FavoritePlace(1, "Ha Noi", "asd", 123.0, 123.0))
-        favoritePlaces
-    }
 }

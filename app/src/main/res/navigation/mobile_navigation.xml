@@ -7,19 +7,20 @@
 
     <fragment
         android:id="@+id/navigation_map"
-        android:name="com.example.mylocation.ui.maps.MapFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_map" />
+        android:label="@string/map"
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_navigation_map_to_navigation_shared"
+            app:destination="@id/navigation_contact" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_shared"
-        android:name="com.example.mylocation.ui.shared.SharedFragment"
-        android:label="@string/shared"
-        tools:layout="@layout/fragment_shared" />
+        android:id="@+id/navigation_contact"
+        android:label="@string/contact"
+        tools:layout="@layout/fragment_contact" >
+        <action
+            android:id="@+id/action_navigation_shared_to_navigation_map"
+            app:destination="@id/navigation_map" />
+    </fragment>
 
-    <fragment
-        android:id="@+id/navigation_favorites"
-        android:name="com.example.mylocation.ui.favorites.FavoriteFragment"
-        android:label="@string/favorites"
-        tools:layout="@layout/fragment_favorites" />
 </navigation>
