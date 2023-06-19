@@ -102,6 +102,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
             markerTitleTextView.text = title
             markerSnippetTextView.text = snippet
 
+            val bottomSheetDialog = BottomSheetDialog(requireContext())
+            bottomSheetDialog.setContentView(bottomSheetView)
+            bottomSheetDialog.show()
+
             favoriteButton.setOnClickListener {
                 try {
                     databaseHelper.newFavoritePlace(
@@ -110,6 +114,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
                         marker.position.latitude,
                         marker.position.longitude
                     )
+                    bottomSheetDialog.dismiss()
                 } catch (e: Exception) {
                     throw Exception("Cannot add this marker")
                 }
@@ -129,11 +134,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
                     .replace(R.id.map, contactFragment)
                     .addToBackStack(null)
                     .commit()
+
+                bottomSheetDialog.dismiss()
             }
 
-            val bottomSheetDialog = BottomSheetDialog(requireContext())
-            bottomSheetDialog.setContentView(bottomSheetView)
-            bottomSheetDialog.show()
         }
     }
 
