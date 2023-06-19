@@ -23,10 +23,10 @@ class ContactsFragment : Fragment() {
     private lateinit var adapter: ContactsAdapter
     private lateinit var databaseHelper: DatabaseHelper
 
-    private val address: String? = arguments?.getString("title")
-    private val snippet: String? = arguments?.getString("snippet")
-    private val latitude: Double? = arguments?.getDouble("latitude")
-    private val longitude: Double? = arguments?.getDouble("longitude")
+    private var address: String? = null
+    private var snippet: String? = null
+    private var latitude: Double? = null
+    private var longitude: Double? = null
 
 
     override fun onCreateView(
@@ -40,6 +40,14 @@ class ContactsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let {
+            address = it.getString("title")
+            snippet = it.getString("snippet")
+            latitude = it.getDouble("latitude")
+            longitude = it.getDouble("longitude")
+        }
+
         val selectedContact = mutableListOf<Contact>()
         val buttonShare: Button = view.findViewById(R.id.button_share)
 
@@ -50,10 +58,10 @@ class ContactsFragment : Fragment() {
 
         adapter = ContactsAdapter(contacts)
         adapter.onItemClick = { contact ->
-            if (adapter.selectedItems.contains(contact)) {
-                adapter.selectedItems.remove(contact)
+            if (selectedContact.contains(contact)) {
+                selectedContact.remove(contact)
             } else {
-                adapter.selectedItems.add(contact)
+                selectedContact.add(contact)
             }
             adapter.notifyDataSetChanged()
         }
@@ -62,12 +70,11 @@ class ContactsFragment : Fragment() {
 
         buttonShare.setOnClickListener {
             try {
-
                 databaseHelper.newSharedPlace(
-                    address?:"",
-                    snippet?:"",
-                    longitude?:0.0,
-                    latitude?:0.0,
+                    address ?: "",
+                    snippet ?: "",
+                    longitude ?: 0.0,
+                    latitude ?: 0.0,
                     (selectedContact) as List<String>
                 )
             } catch (e: Exception) {

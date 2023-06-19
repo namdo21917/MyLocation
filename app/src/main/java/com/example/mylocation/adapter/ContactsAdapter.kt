@@ -48,7 +48,15 @@ class ContactsAdapter(
 
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(contacts[position])
+                val selectedItem = contacts[position]
+                if (selectedItems.contains(selectedItem)) {
+                    selectedItems.remove(selectedItem)
+                } else {
+                    selectedItems.add(selectedItem)
+                }
+                notifyDataSetChanged()
+
+                onItemClick?.invoke(selectedItem)
             }
 
         }
