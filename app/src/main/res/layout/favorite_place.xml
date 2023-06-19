@@ -21,7 +21,7 @@
             android:src="@android:drawable/ic_menu_mapmode" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="311dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center_vertical"
@@ -32,7 +32,7 @@
                 android:id="@+id/text_favorite_place_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
                 android:textAlignment="center"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -41,12 +41,19 @@
                 android:id="@+id/text_favorite_place_snippet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
                 android:textAlignment="center"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_marginRight="30dp"/>
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/delete_favorite"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@android:drawable/presence_busy" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

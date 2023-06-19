@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mylocation.R
+import com.example.mylocation.adapter.FavoritePlaceAdapter
 import com.example.mylocation.adapter.SharedPlaceAdapter
 import com.example.mylocation.data.DatabaseHelper
-import com.example.mylocation.data.SharedPlace
 import com.example.mylocation.databinding.FragmentSharedBinding
 
 class SharedFragment : Fragment() {
@@ -54,10 +54,17 @@ class SharedFragment : Fragment() {
         }
     }
 
-//    private val  mSharedPlaces by lazy {
-//        val favoritePlaces = mutableListOf<SharedPlace>()
-//        favoritePlaces.add(SharedPlace("Van Mieu", "Ha Noi"))
-//        favoritePlaces.add(SharedPlace("Hoang Mai", "Ha Noi"))
-//        favoritePlaces
-//    }
+    override fun onResume() {
+        super.onResume()
+        updateSharedList()
+    }
+
+    private fun updateSharedList() {
+        val sharedPlaceList = databaseHelper.getSharedPlaces()
+
+        sharedPlaceAdapter = SharedPlaceAdapter(sharedPlaceList)
+        sharedPlaceRecyclerView.adapter = sharedPlaceAdapter
+
+    }
+
 }
