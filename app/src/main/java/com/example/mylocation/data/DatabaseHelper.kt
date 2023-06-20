@@ -34,23 +34,28 @@ class DatabaseHelper(context: Context) :
         onUpgrade(db, oldVersion, newVersion)
     }
 
-    fun newFavoritePlace(address: String, snippet: String, longitude: Double, latitude: Double): Long {
+    fun newFavoritePlace(
+        address: String,
+        snippet: String,
+        longitude: Double,
+        latitude: Double
+    ): Long {
         val db = this.writableDatabase
 
         val values = ContentValues().apply {
-            put("address", address)
-            put("snippet", snippet)
-            put("longitude", longitude)
-            put("latitude", latitude)
+            put(FAVORITE_PLACES_TABLE_ADDRESS, address)
+            put(FAVORITE_PLACES_TABLE_SNIPPET, snippet)
+            put(FAVORITE_PLACES_TABLE_LONGITUDE, longitude)
+            put(FAVORITE_PLACES_TABLE_LATITUDE, latitude)
         }
 
         return db.insert(FAVORITE_PLACES_TABLE, null, values)
     }
 
-    fun deleteFavoritePlace(id: Long): Int{
+    fun deleteFavoritePlace(id: Long): Int {
         val db = this.writableDatabase
 
-        val selectedFavoritePlace= "$id LIKE ?"
+        val selectedFavoritePlace = "$id LIKE ?"
 
         val selectionArgs = arrayOf(id.toString())
 
@@ -66,11 +71,16 @@ class DatabaseHelper(context: Context) :
 
         cursor.use {
             while (it.moveToNext()) {
-                val id = it.getLong(it.getColumnIndexOrThrow("id"))
-                val address = it.getString(it.getColumnIndexOrThrow("address"))
-                val snippet = it.getString(it.getColumnIndexOrThrow("snippet"))
-                val longitude = it.getDouble(it.getColumnIndexOrThrow("longitude"))
-                val latitude = it.getDouble(it.getColumnIndexOrThrow("latitude"))
+                val id = it.getLong(it.getColumnIndexOrThrow(FAVORITE_PLACES_TABLE_ID))
+                val address = it.getString(it.getColumnIndexOrThrow(FAVORITE_PLACES_TABLE_ADDRESS))
+                val snippet = it.getString(it.getColumnIndexOrThrow(FAVORITE_PLACES_TABLE_SNIPPET))
+                val longitude = it.getDouble(
+                    it.getColumnIndexOrThrow(
+                        FAVORITE_PLACES_TABLE_LONGITUDE
+                    )
+                )
+                val latitude =
+                    it.getDouble(it.getColumnIndexOrThrow(FAVORITE_PLACES_TABLE_LATITUDE))
 
                 val favoritePlace = FavoritePlace(id, address, snippet, longitude, latitude)
                 favoritePlaces.add(favoritePlace)
@@ -81,15 +91,21 @@ class DatabaseHelper(context: Context) :
         return favoritePlaces
     }
 
-    fun newSharedPlace(address: String, snippet: String, longitude: Double, latitude: Double, contacts: List<String>): Long {
+    fun newSharedPlace(
+        address: String,
+        snippet: String,
+        longitude: Double,
+        latitude: Double,
+        contacts: List<String>
+    ): Long {
         val db = this.writableDatabase
 
         val values = ContentValues().apply {
-            put("address", address)
-            put("snippet", snippet)
-            put("longitude", longitude)
-            put("latitude", latitude)
-            put("contacts", contacts.joinToString(","))
+            put(SHARED_PLACES_TABLE_ADDRESS, address)
+            put(SHARED_PLACES_TABLE_SNIPPET, snippet)
+            put(SHARED_PLACES_TABLE_LONGITUDE, longitude)
+            put(SHARED_PLACES_TABLE_LATITUDE, latitude)
+            put(SHARED_PLACES_TABLE_CONTACTS, contacts.joinToString(","))
         }
 
         return db.insert(SHARED_PLACES_TABLE, null, values)
@@ -105,12 +121,12 @@ class DatabaseHelper(context: Context) :
 
         cursor.use {
             while (it.moveToNext()) {
-                val id = it.getLong(it.getColumnIndexOrThrow("id"))
-                val address = it.getString(it.getColumnIndexOrThrow("address"))
-                val snippet = it.getString(it.getColumnIndexOrThrow("snippet"))
-                val longitude = it.getDouble(it.getColumnIndexOrThrow("longitude"))
-                val latitude = it.getDouble(it.getColumnIndexOrThrow("latitude"))
-                val contacts = it.getString(it.getColumnIndexOrThrow("contacts")).split(",")
+                val id = it.getLong(it.getColumnIndexOrThrow(SHARED_PLACES_TABLE_ID))
+                val address = it.getString(it.getColumnIndexOrThrow(SHARED_PLACES_TABLE_ADDRESS))
+                val snippet = it.getString(it.getColumnIndexOrThrow(SHARED_PLACES_TABLE_SNIPPET))
+                val longitude = it.getDouble(it.getColumnIndexOrThrow(SHARED_PLACES_TABLE_LONGITUDE))
+                val latitude = it.getDouble(it.getColumnIndexOrThrow(SHARED_PLACES_TABLE_LATITUDE))
+                val contacts = it.getString(it.getColumnIndexOrThrow(SHARED_PLACES_TABLE_CONTACTS)).split(",")
 
                 val sharedPlace = SharedPlace(id, address, snippet, longitude, latitude, contacts)
                 sharedPlaces.add(sharedPlace)
@@ -127,14 +143,14 @@ class DatabaseHelper(context: Context) :
 
         const val FAVORITE_PLACES_TABLE = "favorite_places"
         const val FAVORITE_PLACES_TABLE_ID = "id"
-        const val FAVORITE_PLACES_TABLE_ADDRESS= "address"
+        const val FAVORITE_PLACES_TABLE_ADDRESS = "address"
         const val FAVORITE_PLACES_TABLE_SNIPPET = "snippet"
         const val FAVORITE_PLACES_TABLE_LONGITUDE = "longitude"
         const val FAVORITE_PLACES_TABLE_LATITUDE = "latitude"
 
         const val SHARED_PLACES_TABLE = "shared_places"
         const val SHARED_PLACES_TABLE_ID = "id"
-        const val SHARED_PLACES_TABLE_ADDRESS= "address"
+        const val SHARED_PLACES_TABLE_ADDRESS = "address"
         const val SHARED_PLACES_TABLE_SNIPPET = "snippet"
         const val SHARED_PLACES_TABLE_LONGITUDE = "longitude"
         const val SHARED_PLACES_TABLE_LATITUDE = "latitude"
