@@ -256,19 +256,5 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
 
     companion object {
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
-        const val FAVORITE_PLACES_TABLE = "favorite_places"
-        const val FAVORITE_PLACES_TABLE_ID = "id"
-        const val FAVORITE_PLACES_TABLE_ADDRESS = "address"
-        const val FAVORITE_PLACES_TABLE_SNIPPET = "snippet"
-        const val FAVORITE_PLACES_TABLE_LONGITUDE = "longitude"
-        const val FAVORITE_PLACES_TABLE_LATITUDE = "latitude"
-
-        const val SHARED_PLACES_TABLE = "shared_places"
-        const val SHARED_PLACES_TABLE_ID = "id"
-        const val SHARED_PLACES_TABLE_ADDRESS = "address"
-        const val SHARED_PLACES_TABLE_SNIPPET = "snippet"
-        const val SHARED_PLACES_TABLE_LONGITUDE = "longitude"
-        const val SHARED_PLACES_TABLE_LATITUDE = "latitude"
-        const val SHARED_PLACES_TABLE_CONTACTS = "contacts"
     }
 }

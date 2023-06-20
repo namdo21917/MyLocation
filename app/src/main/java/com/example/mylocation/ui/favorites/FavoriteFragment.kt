@@ -37,8 +37,12 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        favoritePlaceRecyclerView = view.findViewById(R.id.recycler_view_favorite_places)
-        val emptyImage: ImageView = view.findViewById(R.id.image_empty_favorite_place)
+        initView()
+    }
+
+    private fun initView() {
+        favoritePlaceRecyclerView = binding.favoriteView.recyclerViewFavoritePlaces
+        val emptyImage: ImageView = binding.favoriteView.imageEmptyFavoritePlace
         favoritePlaceRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         databaseHelper = DatabaseHelper(requireContext())

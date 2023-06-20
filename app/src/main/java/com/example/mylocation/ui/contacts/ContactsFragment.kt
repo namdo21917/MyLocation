@@ -13,6 +13,7 @@ import com.example.mylocation.adapter.ContactsAdapter
 import com.example.mylocation.data.Contact
 import com.example.mylocation.data.DatabaseHelper
 import com.example.mylocation.databinding.FragmentContactBinding
+import com.example.mylocation.utils.doubleToZero
 
 
 class ContactsFragment : Fragment() {
@@ -41,19 +42,12 @@ class ContactsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let {
-            address = it.getString("title")
-            snippet = it.getString("snippet")
-            latitude = it.getDouble("latitude")
-            longitude = it.getDouble("longitude")
-        }
+        initView()
+    }
 
+    private fun initView() {
         val selectedContact = mutableListOf<Contact>()
-        val buttonShare: Button = view.findViewById(R.id.button_share)
-
-        databaseHelper = DatabaseHelper(requireContext())
-
-        contactRecyclerView = view.findViewById(R.id.recycler_view_contacts)
+        contactRecyclerView = binding.recyclerViewContacts
         contactRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         adapter = ContactsAdapter(contacts)
@@ -68,20 +62,33 @@ class ContactsFragment : Fragment() {
 
         contactRecyclerView.adapter = adapter
 
+        initButton(selectedContact)
+    }
+
+    private fun initButton(selectedContact: List<Contact>) {
+        databaseHelper = DatabaseHelper(requireContext())
+
+        arguments?.let {
+            address = it.getString("title")
+            snippet = it.getString("snippet")
+            latitude = it.getDouble("latitude")
+            longitude = it.getDouble("longitude")
+        }
+
+        val buttonShare: Button = binding.buttonShare
         buttonShare.setOnClickListener {
             try {
                 databaseHelper.newSharedPlace(
                     address.orEmpty(),
                     snippet.orEmpty(),
-                    longitude ?: 0.0,
-                    latitude ?: 0.0,
+                    doubleToZero(longitude),
+                    doubleToZero(latitude),
                     (selectedContact) as List<String>
                 )
             } catch (e: Exception) {
                 throw Exception("Cannot add this marker")
             }
         }
-
     }
 
     override fun onDestroyView() {
@@ -100,13 +107,18 @@ class ContactsFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(title: String, snippet:String, latitude: Double, longitude:Double): Fragment{
+        fun newInstance(
+            title: String,
+            snippet: String,
+            latitude: Double,
+            longitude: Double
+        ): Fragment {
             val args = Bundle()
             args.putString("title", title)
             args.putString("snippet", snippet)
             args.putDouble("latitude", latitude)
             args.putDouble("longitude", longitude)
-            
+
             val fragment = ContactsFragment()
             fragment.arguments = args
             return fragment

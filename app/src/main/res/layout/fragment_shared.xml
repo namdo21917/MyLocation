@@ -6,5 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.shared.SharedFragment">
 
-    <include layout="@layout/shared_place_list"/>
+    <include
+        android:id="@+id/shared_view"
+        layout="@layout/shared_place_list"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

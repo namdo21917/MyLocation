@@ -6,5 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.favorites.FavoriteFragment">
 
-    <include layout="@layout/favorite_place_list"/>
+    <include
+        android:id="@+id/favorite_view"
+        layout="@layout/favorite_place_list"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
