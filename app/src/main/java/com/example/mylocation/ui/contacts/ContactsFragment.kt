@@ -71,8 +71,8 @@ class ContactsFragment : Fragment() {
         buttonShare.setOnClickListener {
             try {
                 databaseHelper.newSharedPlace(
-                    address ?: "",
-                    snippet ?: "",
+                    address.orEmpty(),
+                    snippet.orEmpty(),
                     longitude ?: 0.0,
                     latitude ?: 0.0,
                     (selectedContact) as List<String>
@@ -97,5 +97,19 @@ class ContactsFragment : Fragment() {
         contacts.add(Contact("Minh Hiếu", "0971236809"))
         contacts.add(Contact("Hoàng Minh", "0977800009"))
         contacts
+    }
+
+    companion object {
+        fun newInstance(title: String, snippet:String, latitude: Double, longitude:Double): Fragment{
+            val args = Bundle()
+            args.putString("title", title)
+            args.putString("snippet", snippet)
+            args.putDouble("latitude", latitude)
+            args.putDouble("longitude", longitude)
+            
+            val fragment = ContactsFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

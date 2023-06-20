@@ -18,6 +18,7 @@ import com.example.mylocation.R
 import com.example.mylocation.data.DatabaseHelper
 import com.example.mylocation.databinding.FragmentMapBinding
 import com.example.mylocation.ui.contacts.ContactsFragment
+import com.example.mylocation.utils.addFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -121,19 +122,14 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
             }
 
             shareButton.setOnClickListener {
-                val contactFragment = ContactsFragment()
+                val contactFragment = ContactsFragment.newInstance(
+                    title,
+                    snippet,
+                    marker.position.latitude,
+                    marker.position.longitude
+                )
 
-                val bundle = Bundle()
-                bundle.putString("title", title)
-                bundle.putString("snippet", snippet)
-                bundle.putDouble("latitude", marker.position.latitude)
-                bundle.putDouble("longitude", marker.position.longitude)
-                contactFragment.arguments = bundle
-
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.map, contactFragment)
-                    .addToBackStack(null)
-                    .commit()
+                requireActivity().addFragment(R.id.map,contactFragment)
 
                 bottomSheetDialog.dismiss()
             }
@@ -237,10 +233,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
         _binding = null
     }
 
-    companion object {
-        private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
-    }
-
     override fun onMapClick(latLng: LatLng) {
         mMap.clear()
         val geocoder = Geocoder(this.requireContext(), Locale.getDefault())
@@ -260,5 +252,23 @@ class MapFragment : Fragment(), OnMapReadyCallback, OnMapClickListener {
             mMap.addMarker(MarkerOptions().position(latLng))
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
+    }
+
+    companion object {
+        private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
+        const val FAVORITE_PLACES_TABLE = "favorite_places"
+        const val FAVORITE_PLACES_TABLE_ID = "id"
+        const val FAVORITE_PLACES_TABLE_ADDRESS = "address"
+        const val FAVORITE_PLACES_TABLE_SNIPPET = "snippet"
+        const val FAVORITE_PLACES_TABLE_LONGITUDE = "longitude"
+        const val FAVORITE_PLACES_TABLE_LATITUDE = "latitude"
+
+        const val SHARED_PLACES_TABLE = "shared_places"
+        const val SHARED_PLACES_TABLE_ID = "id"
+        const val SHARED_PLACES_TABLE_ADDRESS = "address"
+        const val SHARED_PLACES_TABLE_SNIPPET = "snippet"
+        const val SHARED_PLACES_TABLE_LONGITUDE = "longitude"
+        const val SHARED_PLACES_TABLE_LATITUDE = "latitude"
+        const val SHARED_PLACES_TABLE_CONTACTS = "contacts"
     }
 }
